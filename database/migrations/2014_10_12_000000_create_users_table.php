@@ -27,11 +27,11 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('gender')->nullable()->comment('1=male, 2=female');
             $table->tinyInteger('register_channel')->nullable()->comment('1=2ways, 2=microsite');
             $table->integer('total_point')->default(0);
-            $table->unique(array('phone', 'register_channel'));
+            $table->unique(array('phone','register_channel'));
             $table->timestamps();
         });
-
     }
+
 
     /**
      * Reverse the migrations.

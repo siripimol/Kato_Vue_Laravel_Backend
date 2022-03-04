@@ -29,7 +29,8 @@ class RegisterController extends Controller
         $user->save();
         Auth::login(User::find($user->id));
         return response()->json([
-            'success' => "success",
+            'status' => "success",
+            'phone' => request('phone'),
         ]);
 
     }
@@ -50,7 +51,8 @@ class RegisterController extends Controller
             $users = User::find($checkPhone->id);
             Auth::login($users);
             return response()->json([
-                'status' => "success",
+                'dd' => "success",
+                'phone' => request('phone'),
             ]);
         }
     }

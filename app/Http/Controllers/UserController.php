@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function checkPhoneNumer(Request $request)
     {
-
+        return response($request);
       $checkPhone =   DB::table('users')
         ->where('phone',request('phone'))
         ->where('register_channel',2)
@@ -31,13 +31,15 @@ class UserController extends Controller
             $users = User::find($checkPhone->id);
             Auth::login($users);
             return response()->json([
-                    'status' => "success",
+                'status' => "success",
+                'phone' => request('phone'),
             ]);
        }
     }
 
     public function saveRegister(Request $request)
     {
+        return response($request);
             $user = new User();
             $user->fname = request('fname');
             $user->lname = request('lname');
@@ -54,7 +56,8 @@ class UserController extends Controller
             $user->save();
             Auth::login(User::find($user->id));
             return response()->json([
-                'success' => "success",
+                'status' => "success",
+                'phone' => request('phone'),
             ]);
     }
     public function inputCheck(Request $request)
@@ -66,15 +69,15 @@ class UserController extends Controller
        if($code_check != null){
            if($code_check->status == 1){
             DB::table('codes')->where('code', request('input_1'))
-            ->update(['status' => 2, 'phone_number'=> Auth::user()->phone ,
+            ->update(['status' => 2, 'phone_number'=> request('phone') ,
                         'register_channel'=> 2,'updated_at' => Carbon::now()]);
 
             $point_user = DB::table('codes')
-                        ->where('phone_number',Auth::user()->phone)
+                        ->where('phone_number',request('phone'))
                         ->where('register_channel',2)
                         ->count();
 
-            DB::table('users')->where('phone', Auth::user()->phone)
+            DB::table('users')->where('phone', request('phone'))
                 ->update(['total_point' =>  $point_user]);
 
             return response()->json([
@@ -98,7 +101,7 @@ class UserController extends Controller
     }
     public function getHistory(Request $request)
     {
-        $history =  Code::where('phone_number', Auth::user()->phone)->orderBy('updated_at', 'desc')->get();
+        $history =  Code::where('phone_number', request('phone'))->orderBy('updated_at', 'desc')->get();
         if (count($history) >= 1){
             foreach ($history as $value) {
                 $data[] = [
@@ -111,7 +114,9 @@ class UserController extends Controller
         else {
             $data = null;
         }
-      return view('history',compact('data'));
+        return response()->json([
+            'data_history' => $data,
+        ]);
     }
 
     public function checkType(Request $request)

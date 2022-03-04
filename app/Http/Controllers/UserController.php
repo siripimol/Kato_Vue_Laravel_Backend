@@ -15,7 +15,6 @@ class UserController extends Controller
 
     public function checkPhoneNumer(Request $request)
     {
-        return response($request);
       $checkPhone =   DB::table('users')
         ->where('phone',request('phone'))
         ->where('register_channel',2)
@@ -39,7 +38,6 @@ class UserController extends Controller
 
     public function saveRegister(Request $request)
     {
-        return response($request);
             $user = new User();
             $user->fname = request('fname');
             $user->lname = request('lname');
